@@ -15,6 +15,11 @@ class UserRepository implements IUserRepository {
     return user;
   }
 
+  public async findByCPF(cpf: string): Promise<User | undefined> {
+    const user = this.ormRepository.findOne({ where: { CPF: cpf } });
+    return user;
+  }
+
   public async create({
     name,
     email,

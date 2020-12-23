@@ -3,6 +3,7 @@ import ICreateUserDTO from '../dtos/ICreateUserDTO';
 
 export default interface IUserRepository {
   findById(id: string): Promise<User | undefined>;
+  findByCPF(cpf: string): Promise<User | undefined>;
   create(data: ICreateUserDTO): Promise<User>;
-  save(appointment: User): Promise<User>;
+  save(user: User): Promise<User>;
 }
