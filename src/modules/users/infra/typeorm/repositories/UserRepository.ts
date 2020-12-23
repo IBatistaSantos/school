@@ -20,6 +20,17 @@ class UserRepository implements IUserRepository {
     return user;
   }
 
+  public async getUserByRole(roleName: string): Promise<User[]> {
+    const user = await this.ormRepository
+      .createQueryBuilder('users')
+      .innerJoin('users.roles', 'role', 'role.name = :name', {
+        name: roleName,
+      })
+      .getMany();
+
+    return user;
+  }
+
   public async create({
     name,
     email,
