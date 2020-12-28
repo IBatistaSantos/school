@@ -10,18 +10,23 @@ class SchoolRepository implements ISchoolRepository {
     this.ormRepository = getRepository(School);
   }
 
-  public async findName(name: string): Promise<School | undefined> {
-    const user = this.ormRepository.findOne({ where: { name } });
-    return user;
+  public async findByName(name: string): Promise<School | undefined> {
+    const school = this.ormRepository.findOne({ where: { name } });
+    return school;
+  }
+
+  public async findSchoolByUser(user_id: string): Promise<School[]> {
+    const school = this.ormRepository.find({ where: { user_id } });
+    return school;
   }
 
   public async create({ name, user_id }: ICreateSchoolDTO): Promise<School> {
-    const user = this.ormRepository.create({
+    const school = this.ormRepository.create({
       name,
       user_id,
     });
-    await this.ormRepository.save(user);
-    return user;
+    await this.ormRepository.save(school);
+    return school;
   }
 
   public async save(school: School): Promise<School> {
