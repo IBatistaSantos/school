@@ -10,10 +10,18 @@ import RoleRepository from '@modules/roles/infra/typeorm/repositories/RoleReposi
 import IPermissionRepository from '@modules/permissions/repositories/IPermissionRepository';
 import PermissionRepository from '@modules/permissions/infra/typeorm/repositories/PermissionRepository';
 
+import ISchoolRepository from '@modules/school/repositories/ISchoolRepository';
+import SchoolRepository from '@modules/school/infra/typeorm/repositories/SchoolRepository';
+
 container.registerSingleton<IUserRepository>('UserRepository', UserRepository);
 container.registerSingleton<IRoleRepository>('RoleRepository', RoleRepository);
 
 container.registerSingleton<IPermissionRepository>(
   'PermissionRepository',
   PermissionRepository,
+);
+
+container.registerSingleton<ISchoolRepository>(
+  'SchoolRepository',
+  SchoolRepository,
 );

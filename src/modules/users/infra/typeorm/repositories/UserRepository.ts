@@ -10,9 +10,28 @@ class UserRepository implements IUserRepository {
     this.ormRepository = getRepository(User);
   }
 
-  public async findById(id: string): Promise<User | undefined> {
-    const user = this.ormRepository.findOne(id);
+  public async findByEmail(email: string): Promise<User | undefined> {
+    const user = this.ormRepository.findOne({ where: { email } });
     return user;
+  }
+
+  public async findById(id: string): Promise<User | undefined> {
+    const user = this.ormRepository.findOne({ id });
+    return user;
+  }
+
+  public async isRoleUser(user_id: string, roleName: string): Promise<boolean> {
+    const user = await this.ormRepository.findOneOrFail({
+      relations: ['roles'],
+      where: { id: user_id },
+    });
+
+    const checkRoleUser = user.roles.find(role => role.name === roleName);
+
+    if (checkRoleUser) {
+      return true;
+    }
+    return false;
   }
 
   public async findByCPF(cpf: string): Promise<User | undefined> {
