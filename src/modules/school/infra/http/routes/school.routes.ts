@@ -5,9 +5,11 @@ import ensureAuthenticaded from '@modules/users/infra/middlewares/ensureAuthenti
 
 import CheckAccess from '@modules/users/infra/middlewares/verifiyRole';
 import SchoolController from '../controllers/SchoolController';
+import ListSchoolUserController from '../controllers/ListSchoolUserController';
 
 const schoolRouter = Router();
 const schoolController = new SchoolController();
+const listSchoolUserController = new ListSchoolUserController();
 const checkAccess = new CheckAccess();
 schoolRouter.use(ensureAuthenticaded);
 schoolRouter.use(checkAccess.isMaster);
@@ -20,5 +22,6 @@ schoolRouter.post(
   }),
   schoolController.create,
 );
+schoolRouter.get('/', listSchoolUserController.index);
 
 export default schoolRouter;
