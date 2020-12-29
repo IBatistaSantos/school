@@ -41,8 +41,6 @@ class CreateTeacherService {
       permissions,
     });
 
-    // const userExists = userReposotory.findById(user_id);
-
     const teacher = await this.teacherRepository.create({
       user_id: user.id,
       school_id,
