@@ -20,11 +20,41 @@ class UserRepository implements IUserRepository {
     return user;
   }
 
+  public async isAllowedResource(
+    user_id: string,
+    action: string,
+  ): Promise<boolean> {
+    const user = await this.ormRepository.findOneOrFail({
+      relations: ['roles', 'permissions'],
+      where: { id: user_id },
+    });
+
+    const checkUserIsMaster = user.roles.find(role => role.name === 'Master');
+    if (checkUserIsMaster) {
+      return true;
+    }
+
+    const checkPermission = user.permissions.find(
+      permission => permission.name === action,
+    );
+
+    if (checkPermission) {
+      return true;
+    }
+
+    return false;
+  }
+
   public async isRoleUser(user_id: string, roleName: string): Promise<boolean> {
     const user = await this.ormRepository.findOneOrFail({
       relations: ['roles'],
       where: { id: user_id },
     });
+
+    const checkUserIsMaster = user.roles.find(role => role.name === 'Master');
+    if (checkUserIsMaster) {
+      return true;
+    }
 
     const checkRoleUser = user.roles.find(role => role.name === roleName);
 

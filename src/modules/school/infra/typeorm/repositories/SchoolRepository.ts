@@ -15,6 +15,11 @@ class SchoolRepository implements ISchoolRepository {
     return school;
   }
 
+  public async findById(id: string): Promise<School | undefined> {
+    const school = this.ormRepository.findOne({ where: { id } });
+    return school;
+  }
+
   public async findSchoolByUser(user_id: string): Promise<School[]> {
     const school = this.ormRepository.find({ where: { user_id } });
     return school;
