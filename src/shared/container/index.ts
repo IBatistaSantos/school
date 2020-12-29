@@ -12,6 +12,8 @@ import PermissionRepository from '@modules/permissions/infra/typeorm/repositorie
 
 import ISchoolRepository from '@modules/school/repositories/ISchoolRepository';
 import SchoolRepository from '@modules/school/infra/typeorm/repositories/SchoolRepository';
+import IAdmininstratorRepository from '@modules/administrators/repositories/IAdministratorRepository';
+import AdministratorRepository from '@modules/administrators/infra/typeorm/repositories/AdministratorRepository';
 
 container.registerSingleton<IUserRepository>('UserRepository', UserRepository);
 container.registerSingleton<IRoleRepository>('RoleRepository', RoleRepository);
@@ -24,4 +26,8 @@ container.registerSingleton<IPermissionRepository>(
 container.registerSingleton<ISchoolRepository>(
   'SchoolRepository',
   SchoolRepository,
+);
+container.registerSingleton<IAdmininstratorRepository>(
+  'AdministratorRepository',
+  AdministratorRepository,
 );

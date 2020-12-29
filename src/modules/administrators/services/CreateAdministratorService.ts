@@ -1,13 +1,13 @@
 import SchoolRepository from '@modules/school/infra/typeorm/repositories/SchoolRepository';
-import UserRepository from '@modules/users/infra/typeorm/repositories/UserRepository';
+import CreateUserService from '@modules/users/services/CreateUserService';
 import AppError from '@shared/errors/AppError';
-import { injectable, inject } from 'tsyringe';
+import { injectable, inject, container } from 'tsyringe';
+import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
 import Administrator from '../infra/typeorm/entities/Administrator';
 import IAdministratorRepository from '../repositories/IAdministratorRepository';
 
-interface IRequest {
+interface IRequest extends ICreateUserDTO {
   school_id: string;
-  user_id: string;
 }
 
 @injectable()
@@ -18,15 +18,26 @@ class CrearteAdministratorlService {
   ) {}
 
   public async execute({
+    name,
+    email,
+    password,
+    cpf,
+    roles,
+    permissions,
     school_id,
-    user_id,
   }: IRequest): Promise<Administrator> {
-    const userRepository = new UserRepository();
     const schoolRepository = new SchoolRepository();
-    const user = await userRepository.findById(user_id);
-    if (!user) {
-      throw new AppError('Usuário não encontrado');
-    }
+
+    const createUserService = container.resolve(CreateUserService);
+
+    const user = await createUserService.execute({
+      name,
+      email,
+      password,
+      cpf,
+      roles,
+      permissions,
+    });
 
     const schoolExists = await schoolRepository.findById(school_id);
 
@@ -34,18 +45,9 @@ class CrearteAdministratorlService {
       throw new AppError('Escola não encontrada');
     }
 
-    const isAllowed = await userRepository.isAllowedResource(
-      user_id,
-      'Cadastrar Administrador',
-    );
-
-    if (!isAllowed) {
-      throw new AppError('Usuário não tem permissão para acessar esse recurso');
-    }
-
     const administrator = await this.administratorRepository.create({
       school_id,
-      user_id,
+      user_id: user.id,
     });
     return administrator;
   }

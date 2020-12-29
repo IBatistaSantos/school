@@ -29,7 +29,6 @@ class CreateTeacherService {
     roles,
     permissions,
     school_id,
-    user_id,
   }: IRequest): Promise<Teacher> {
     const createUserService = container.resolve(CreateUserService);
 
