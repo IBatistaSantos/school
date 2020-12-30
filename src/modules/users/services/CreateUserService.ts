@@ -5,7 +5,6 @@ import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 import IRoleRepository from '@modules/roles/repositories/IRoleRepository';
 import IPermissionRepository from '@modules/permissions/repositories/IPermissionRepository';
-import { getRepository } from 'typeorm';
 import IUserRepository from '../repositories/IUserRepository';
 import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 
@@ -60,11 +59,7 @@ class CreateUserService {
       roles.map(async role => {
         const checkRole = await this.roleRepository.findByName(role.name);
         if (checkRole) {
-          await getRepository(User)
-            .createQueryBuilder()
-            .relation(User, 'roles')
-            .of(user)
-            .add(checkRole);
+          await this.userRepository.attachRole(user, checkRole);
         }
       });
     }
@@ -75,11 +70,7 @@ class CreateUserService {
           permission.name,
         );
         if (checkPermission) {
-          await getRepository(User)
-            .createQueryBuilder()
-            .relation(User, 'permissions')
-            .of(user)
-            .add(checkPermission);
+          await this.userRepository.attachPermission(user, checkPermission);
         }
       });
     }
