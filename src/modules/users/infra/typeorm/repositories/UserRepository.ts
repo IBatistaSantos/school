@@ -1,5 +1,3 @@
-import Permissions from '@modules/permissions/infra/typeorm/entities/Permissions';
-import Roles from '@modules/roles/infra/typeorm/entities/Roles';
 import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
 import { getRepository, Repository } from 'typeorm';
 import IUserRepository from '../../../repositories/IUserRepository';
@@ -100,25 +98,6 @@ class UserRepository implements IUserRepository {
 
   public async save(user: User): Promise<User> {
     return this.ormRepository.save(user);
-  }
-
-  public async attachRole(user: User, role: Roles): Promise<void> {
-    await getRepository(User)
-      .createQueryBuilder()
-      .relation(User, 'roles')
-      .of(user)
-      .add(role);
-  }
-
-  public async attachPermission(
-    user: User,
-    permission: Permissions,
-  ): Promise<void> {
-    await getRepository(User)
-      .createQueryBuilder()
-      .relation(User, 'permission')
-      .of(user)
-      .add(permission);
   }
 }
 export default UserRepository;

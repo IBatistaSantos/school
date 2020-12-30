@@ -1,5 +1,6 @@
 import ICreateRoleDTO from '@modules/roles/dtos/ICreateRoleDTO';
 import IRoleRepository from '@modules/roles/repositories/IRoleRepository';
+import User from '@modules/users/infra/typeorm/entities/User';
 import { getRepository, Repository } from 'typeorm';
 import Roles from '../entities/Roles';
 
@@ -8,6 +9,14 @@ class RoleRepository implements IRoleRepository {
 
   constructor() {
     this.ormRepository = getRepository(Roles);
+  }
+
+  public async attach(user: User, role: Roles): Promise<void> {
+    await getRepository(User)
+      .createQueryBuilder()
+      .relation(User, 'roles')
+      .of(user)
+      .add(role);
   }
 
   public async findByName(name: string): Promise<Roles | undefined> {

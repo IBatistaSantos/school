@@ -59,7 +59,7 @@ class CreateUserService {
       roles.map(async role => {
         const checkRole = await this.roleRepository.findByName(role.name);
         if (checkRole) {
-          await this.userRepository.attachRole(user, checkRole);
+          await this.roleRepository.attach(user, checkRole);
         }
       });
     }
@@ -70,7 +70,7 @@ class CreateUserService {
           permission.name,
         );
         if (checkPermission) {
-          await this.userRepository.attachPermission(user, checkPermission);
+          await this.permissionRepository.attach(user, checkPermission);
         }
       });
     }
