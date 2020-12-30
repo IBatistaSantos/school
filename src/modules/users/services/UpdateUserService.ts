@@ -2,10 +2,9 @@ import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 
 import User from '@modules/users/infra/typeorm/entities/User';
-import Roles from '@modules/roles/infra/typeorm/entities/Roles';
 import IRoleRepository from '@modules/roles/repositories/IRoleRepository';
 import IPermissionRepository from '@modules/permissions/repositories/IPermissionRepository';
-import Permissions from '@modules/permissions/infra/typeorm/entities/Permissions';
+import { getRepository } from 'typeorm';
 import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 import IUserRepository from '../repositories/IUserRepository';
 
@@ -71,39 +70,35 @@ class UpdateProfile {
       }
       user.password = await this.hashProvider.generateHash(password);
     }
+
     if (roles) {
-      let rolesExists: any[] = [];
-      rolesExists = await Promise.all(
-        roles.map((role): Promise<Roles | undefined> | undefined => {
-          const checkExists = this.roleRepository.findByName(role.name);
-          if (checkExists) {
-            return checkExists;
-          }
-          return checkExists;
-        }),
-      );
-      user.roles = rolesExists;
-      await this.userRepository.save(user);
+      roles.map(async role => {
+        const checkRole = await this.roleRepository.findByName(role.name);
+        if (checkRole) {
+          await getRepository(User)
+            .createQueryBuilder()
+            .relation(User, 'roles')
+            .of(user)
+            .add(checkRole);
+        }
+      });
     }
 
     if (permissions) {
-      let permissionsExists: any = [];
-      permissionsExists = await Promise.all(
-        permissions.map((permission):
-          | Promise<Permissions | undefined>
-          | undefined => {
-          const checkExists = this.permissionRepository.findByName(
-            permission.name,
-          );
-          if (checkExists) {
-            return checkExists;
-          }
-          return checkExists;
-        }),
-      );
-      user.permissions = permissionsExists;
-      await this.userRepository.save(user);
+      permissions.map(async permission => {
+        const checkPermission = await this.permissionRepository.findByName(
+          permission.name,
+        );
+        if (checkPermission) {
+          await getRepository(User)
+            .createQueryBuilder()
+            .relation(User, 'permissions')
+            .of(user)
+            .add(checkPermission);
+        }
+      });
     }
+
     return user;
   }
 }
