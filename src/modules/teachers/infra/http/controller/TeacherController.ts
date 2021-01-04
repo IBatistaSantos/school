@@ -3,7 +3,7 @@ import { container } from 'tsyringe';
 import CreateTeacherService from '@modules/teachers/services/CreateTeacherService';
 import { classToClass } from 'class-transformer';
 
-export default class UsersController {
+export default class TeacherController {
   public async create(request: Request, response: Response): Promise<Response> {
     const { id } = request.user;
     const {
@@ -17,8 +17,7 @@ export default class UsersController {
     } = request.body;
 
     const createTeacherService = container.resolve(CreateTeacherService);
-
-    const teacher = createTeacherService.execute({
+    const teacher = await createTeacherService.execute({
       name,
       email,
       password,

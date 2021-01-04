@@ -1,4 +1,4 @@
-export default interface ICreateUserDTO {
+export default interface ICreateTeacherDTO {
   user_id: string;
   school_id: string;
 }

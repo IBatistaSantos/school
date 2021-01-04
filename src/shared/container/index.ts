@@ -14,6 +14,8 @@ import ISchoolRepository from '@modules/school/repositories/ISchoolRepository';
 import SchoolRepository from '@modules/school/infra/typeorm/repositories/SchoolRepository';
 import IAdmininstratorRepository from '@modules/administrators/repositories/IAdministratorRepository';
 import AdministratorRepository from '@modules/administrators/infra/typeorm/repositories/AdministratorRepository';
+import ITeacherRepository from '@modules/teachers/repositories/ITeacherRepository';
+import TeacherRepository from '@modules/teachers/infra/typeorm/repositories/TeacherRepository';
 
 container.registerSingleton<IUserRepository>('UserRepository', UserRepository);
 container.registerSingleton<IRoleRepository>('RoleRepository', RoleRepository);
@@ -30,4 +32,9 @@ container.registerSingleton<ISchoolRepository>(
 container.registerSingleton<IAdmininstratorRepository>(
   'AdministratorRepository',
   AdministratorRepository,
+);
+
+container.registerSingleton<ITeacherRepository>(
+  'TeacherRepository',
+  TeacherRepository,
 );

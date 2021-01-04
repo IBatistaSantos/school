@@ -30,7 +30,7 @@ class CreateTeacherService {
     @inject('SchoolRepository')
     private schoolRepository: ISchoolRepository,
 
-    @inject('AdministradorRepository')
+    @inject('AdministratorRepository')
     private administratorRepository: IAdmininstratorRepository,
   ) {}
 
@@ -62,7 +62,7 @@ class CreateTeacherService {
 
       const hasAccessResources = await this.userRepository.hasPermission(
         user_id,
-        'Cadastrar Professores',
+        'Cadastrar Professor',
       );
 
       if (!hasAccessResources) {
@@ -74,7 +74,7 @@ class CreateTeacherService {
 
     const createUserService = container.resolve(CreateUserService);
 
-    const user = await createUserService.execute({
+    const userTeacher = await createUserService.execute({
       name,
       email,
       password,
@@ -84,7 +84,7 @@ class CreateTeacherService {
     });
 
     const teacher = await this.teacherRepository.create({
-      user_id: user.id,
+      user_id: userTeacher.id,
       school_id,
     });
 
