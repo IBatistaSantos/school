@@ -1,8 +1,9 @@
-import SchoolRepository from '@modules/school/infra/typeorm/repositories/SchoolRepository';
 import CreateUserService from '@modules/users/services/CreateUserService';
 import AppError from '@shared/errors/AppError';
 import { injectable, inject, container } from 'tsyringe';
 import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
+import IUserRepository from '@modules/users/repositories/IUserRepository';
+import ISchoolRepository from '@modules/school/repositories/ISchoolRepository';
 import Administrator from '../infra/typeorm/entities/Administrator';
 import IAdministratorRepository from '../repositories/IAdministratorRepository';
 
@@ -16,6 +17,10 @@ class CrearteAdministratorlService {
   constructor(
     @inject('AdministratorRepository')
     private administratorRepository: IAdministratorRepository,
+    @inject('UserRepository')
+    private userRepository: IUserRepository,
+    @inject('SchoolRepository')
+    private schoolRepository: ISchoolRepository,
   ) {}
 
   public async execute({
@@ -28,19 +33,7 @@ class CrearteAdministratorlService {
     school_id,
     user_id,
   }: IRequest): Promise<Administrator> {
-    const schoolRepository = new SchoolRepository();
-    const createUserService = container.resolve(CreateUserService);
-
-    const admUser = await createUserService.execute({
-      name,
-      email,
-      password,
-      cpf,
-      roles,
-      permissions,
-    });
-
-    const schoolExists = await schoolRepository.findById(school_id);
+    const schoolExists = await this.schoolRepository.findById(school_id);
 
     if (!schoolExists) {
       throw new AppError('Escola não encontrada');
@@ -57,7 +50,28 @@ class CrearteAdministratorlService {
           'Você não pode cadastrar administradores nessa escola',
         );
       }
+
+      const hasAccessResources = await this.userRepository.hasPermission(
+        user_id,
+        'Cadastrar Administrador',
+      );
+
+      if (!hasAccessResources) {
+        throw new AppError(
+          'Usuário não tem permissão para acessar esse recurso',
+        );
+      }
     }
+
+    const createUserService = container.resolve(CreateUserService);
+    const admUser = await createUserService.execute({
+      name,
+      email,
+      password,
+      cpf,
+      roles,
+      permissions,
+    });
 
     const administrator = await this.administratorRepository.create({
       school_id,
