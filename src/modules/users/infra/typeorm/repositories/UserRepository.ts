@@ -20,45 +20,17 @@ class UserRepository implements IUserRepository {
     return user;
   }
 
-  public async isAllowedResource(
-    user_id: string,
-    action: string,
-  ): Promise<boolean> {
-    const user = await this.ormRepository.findOneOrFail({
-      relations: ['roles', 'permissions'],
-      where: { id: user_id },
-    });
-
-    const checkUserIsMaster = user.roles.find(role => role.name === 'Master');
-    if (checkUserIsMaster) {
-      return true;
-    }
-
-    const checkPermission = user.permissions.find(
-      permission => permission.name === action,
-    );
-
-    if (checkPermission) {
-      return true;
-    }
-
-    return false;
-  }
-
-  public async isRoleUser(user_id: string, roleName: string): Promise<boolean> {
+  public async isProfile(user_id: string, profile: string): Promise<boolean> {
     const user = await this.ormRepository.findOneOrFail({
       relations: ['roles'],
       where: { id: user_id },
     });
 
-    const checkUserIsMaster = user.roles.find(role => role.name === 'Master');
-    if (checkUserIsMaster) {
+    const checkProfileUser = user.roles.find(role => role.name === profile);
+    if (checkProfileUser) {
       return true;
     }
-
-    const checkRoleUser = user.roles.find(role => role.name === roleName);
-
-    if (checkRoleUser) {
+    if (checkProfileUser) {
       return true;
     }
     return false;
@@ -67,6 +39,25 @@ class UserRepository implements IUserRepository {
   public async findByCPF(cpf: string): Promise<User | undefined> {
     const user = this.ormRepository.findOne({ where: { CPF: cpf } });
     return user;
+  }
+
+  public async hasPermission(
+    user_id: string,
+    permission: string,
+  ): Promise<boolean> {
+    const user = await this.ormRepository.findOneOrFail({
+      relations: ['permissions'],
+      where: { id: user_id },
+    });
+
+    const checkPermissionUser = user.permissions.find(
+      permissionUser => permissionUser.name === permission,
+    );
+    if (checkPermissionUser) {
+      return true;
+    }
+
+    return false;
   }
 
   public async getUserByRole(roleName: string): Promise<User[]> {

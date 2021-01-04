@@ -5,6 +5,7 @@ import { classToClass } from 'class-transformer';
 
 export default class AdministratorController {
   public async create(request: Request, response: Response): Promise<Response> {
+    const { id } = request.user;
     const {
       name,
       email,
@@ -26,6 +27,7 @@ export default class AdministratorController {
       permissions,
       school_id,
       cpf,
+      user_id: id,
     });
 
     return response.json(classToClass(user));

@@ -12,7 +12,7 @@ export default async function checkAccess(
   const userRepository = new UserRepository();
 
   if (roleName) {
-    const isRole = await userRepository.isRoleUser(id, roleName);
+    const isRole = await userRepository.isProfile(id, roleName);
 
     if (!isRole) {
       throw new AppError('Usuário não tem permissão para acessar esse recurso');

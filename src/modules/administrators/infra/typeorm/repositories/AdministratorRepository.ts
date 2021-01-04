@@ -27,6 +27,21 @@ class AdministratorRepository implements IAdmininstratorRepository {
     return administrator;
   }
 
+  public async isEmployeeSchool(
+    user_id: string,
+    school_id: string,
+  ): Promise<boolean> {
+    const adminSchool = await this.ormRepository.findOne({
+      where: { school_id, user_id },
+    });
+
+    if (adminSchool) {
+      return true;
+    }
+
+    return false;
+  }
+
   public async save(administrator: Administrator): Promise<Administrator> {
     return this.ormRepository.save(administrator);
   }

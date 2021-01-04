@@ -1,4 +1,5 @@
 import Permissions from '@modules/permissions/infra/typeorm/entities/Permissions';
+import User from '@modules/users/infra/typeorm/entities/User';
 import {
   Column,
   CreateDateColumn,
@@ -22,6 +23,10 @@ export default class Roles {
 
   @CreateDateColumn()
   created_at: Date;
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  user: User[];
 
   @ManyToMany(() => Permissions)
   @JoinTable()

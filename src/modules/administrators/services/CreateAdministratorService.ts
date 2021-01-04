@@ -8,6 +8,7 @@ import IAdministratorRepository from '../repositories/IAdministratorRepository';
 
 interface IRequest extends ICreateUserDTO {
   school_id: string;
+  user_id: string;
 }
 
 @injectable()
@@ -25,12 +26,12 @@ class CrearteAdministratorlService {
     roles,
     permissions,
     school_id,
+    user_id,
   }: IRequest): Promise<Administrator> {
     const schoolRepository = new SchoolRepository();
-
     const createUserService = container.resolve(CreateUserService);
 
-    const user = await createUserService.execute({
+    const admUser = await createUserService.execute({
       name,
       email,
       password,
@@ -45,9 +46,22 @@ class CrearteAdministratorlService {
       throw new AppError('Escola não encontrada');
     }
 
+    if (schoolExists.user_id !== user_id) {
+      const checkEmployeeIsSchool = await this.administratorRepository.isEmployeeSchool(
+        user_id,
+        school_id,
+      );
+
+      if (!checkEmployeeIsSchool) {
+        throw new AppError(
+          'Você não pode cadastrar administradores nessa escola',
+        );
+      }
+    }
+
     const administrator = await this.administratorRepository.create({
       school_id,
-      user_id: user.id,
+      user_id: admUser.id,
     });
     return administrator;
   }
