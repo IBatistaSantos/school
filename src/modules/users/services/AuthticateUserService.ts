@@ -30,10 +30,17 @@ class AuthticateUserService {
     let user: User | undefined;
     if (cpf) {
       user = await this.userRepository.findByCPF(cpf);
+
       if (!user) {
         throw new AppError(
           'Esse CPF não foi encontrado, verifique seu CPF',
           401,
+        );
+      }
+
+      if (!user.isActive) {
+        throw new AppError(
+          'O acesso do usuário foi negado, entre em contato com a escola',
         );
       }
     } else if (email) {
@@ -42,6 +49,12 @@ class AuthticateUserService {
         throw new AppError(
           'Email não encontrado, verfique emai digitado ',
           401,
+        );
+      }
+
+      if (!user.isActive) {
+        throw new AppError(
+          'O acesso do usuário foi negado, entre em contato com a escola',
         );
       }
     } else {

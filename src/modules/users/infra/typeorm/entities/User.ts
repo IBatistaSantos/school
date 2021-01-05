@@ -29,6 +29,9 @@ export default class User {
   @Exclude()
   password: string;
 
+  @Column()
+  isActive: boolean;
+
   @ManyToMany(() => Roles)
   @JoinTable()
   roles: Roles[];
