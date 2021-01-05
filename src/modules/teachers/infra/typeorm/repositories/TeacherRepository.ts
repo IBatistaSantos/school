@@ -11,8 +11,8 @@ class TeacherRepository implements ITeacherRepository {
   }
 
   public async findById(id: string): Promise<Teacher | undefined> {
-    const school = this.ormRepository.findOne({ where: { id } });
-    return school;
+    const teacher = this.ormRepository.findOne(id);
+    return teacher;
   }
 
   public async create({

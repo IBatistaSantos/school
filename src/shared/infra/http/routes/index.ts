@@ -9,6 +9,7 @@ import teachersRouter from '@modules/teachers/infra/http/routes/teacher.routes';
 import updateUserRouter from '@modules/users/infra/htttp/routes/update.routes';
 import administatorRouter from '@modules/administrators/infra/http/routes/administrator.routes';
 import resetPasswordAdministatorRouter from '@modules/administrators/infra/http/routes/reset.password.routes';
+import resetPasswordTeacherRouter from '@modules/teachers/infra/http/routes/reset.password.routes';
 
 const routes = Router();
 
@@ -19,8 +20,11 @@ routes.use('/roles', roleRouter);
 routes.use('/permissions', permissionRouter);
 
 routes.use('/school', schoolRouter);
+
 routes.use('/administrator', administatorRouter);
 routes.use('/reset/password/admin', resetPasswordAdministatorRouter);
+
 routes.use('/teachers', teachersRouter);
+routes.use('/reset/password/teacher', resetPasswordTeacherRouter);
 
 export default routes;
