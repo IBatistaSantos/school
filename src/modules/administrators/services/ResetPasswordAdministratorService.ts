@@ -15,10 +15,13 @@ class ResetPasswordAdministratorService {
   constructor(
     @inject('AdministratorRepository')
     private administratorRepository: IAdministratorRepository,
+
     @inject('UserRepository')
     private userRepository: IUserRepository,
+
     @inject('HashProvider')
     private hashProvider: IHashProvider,
+
     @inject('SchoolRepository')
     private schoolRepository: ISchoolRepository,
   ) {}
