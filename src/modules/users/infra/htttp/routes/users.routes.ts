@@ -2,11 +2,9 @@ import { Router } from 'express';
 
 import { celebrate, Segments, Joi } from 'celebrate';
 import UsersController from '../controllers/UsersController';
-import ListUsersByRoleController from '../controllers/ListUserByRoleController';
 
 const usersRouter = Router();
 const userController = new UsersController();
-const listUserByRoleController = new ListUsersByRoleController();
 
 usersRouter.post(
   '/',
@@ -30,7 +28,4 @@ usersRouter.post(
   }),
   userController.create,
 );
-
-usersRouter.get('/:roleName', listUserByRoleController.index);
-
 export default usersRouter;
