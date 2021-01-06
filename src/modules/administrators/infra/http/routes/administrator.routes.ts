@@ -31,4 +31,14 @@ administatorRouter.post(
   administatorController.create,
 );
 
+administatorRouter.get(
+  '/:school_id',
+  celebrate({
+    [Segments.PARAMS]: {
+      school_id: Joi.string().required(),
+    },
+  }),
+  administatorController.index,
+);
+
 export default administatorRouter;

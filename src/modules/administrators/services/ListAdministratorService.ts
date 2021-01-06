@@ -2,8 +2,7 @@ import IAdmininstratorRepository from '@modules/administrators/repositories/IAdm
 import ISchoolRepository from '@modules/school/repositories/ISchoolRepository';
 import AppError from '@shared/errors/AppError';
 import { injectable, inject } from 'tsyringe';
-import Teacher from '../infra/typeorm/entities/Teacher';
-import ITeacherRepository from '../repositories/ITeacherRepository';
+import Administrator from '../infra/typeorm/entities/Administrator';
 
 interface IRequest {
   school_id: string;
@@ -13,9 +12,6 @@ interface IRequest {
 @injectable()
 class ListTeacherService {
   constructor(
-    @inject('TeacherRepository')
-    private teacherRepository: ITeacherRepository,
-
     @inject('SchoolRepository')
     private schoolRepository: ISchoolRepository,
 
@@ -23,7 +19,10 @@ class ListTeacherService {
     private administratorRepository: IAdmininstratorRepository,
   ) {}
 
-  public async execute({ school_id, user_id }: IRequest): Promise<Teacher[]> {
+  public async execute({
+    school_id,
+    user_id,
+  }: IRequest): Promise<Administrator[]> {
     const schoolExist = await this.schoolRepository.findById(school_id);
 
     if (!schoolExist) {
@@ -42,7 +41,7 @@ class ListTeacherService {
         );
       }
     }
-    const teachers = await this.teacherRepository.findBySchool(school_id);
+    const teachers = await this.administratorRepository.findBySchool(school_id);
     return teachers;
   }
 }

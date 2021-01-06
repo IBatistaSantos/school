@@ -52,7 +52,7 @@ class ResetPasswordTeacherService {
     }
 
     if (schoolExists.user_id !== user_id) {
-      const checkEmployeeIsSchool = await this.administratorRepository.isEmployeeSchool(
+      const checkEmployeeIsSchool = await this.administratorRepository.isSchoolEmployee(
         user_id,
         teacher.school_id,
       );

@@ -15,6 +15,14 @@ class AdministratorRepository implements IAdmininstratorRepository {
     return school;
   }
 
+  public async findBySchool(school_id: string): Promise<Administrator[]> {
+    const schools = await this.ormRepository.find({
+      where: { school_id },
+      relations: ['user'],
+    });
+    return schools;
+  }
+
   public async create({
     school_id,
     user_id,
@@ -27,7 +35,7 @@ class AdministratorRepository implements IAdmininstratorRepository {
     return administrator;
   }
 
-  public async isEmployeeSchool(
+  public async isSchoolEmployee(
     user_id: string,
     school_id: string,
   ): Promise<boolean> {
