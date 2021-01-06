@@ -3,9 +3,11 @@ import { Router } from 'express';
 import { celebrate, Segments, Joi } from 'celebrate';
 import ensureAuthenticaded from '@modules/users/infra/middlewares/ensureAuthenticated';
 import TeacherController from '../controller/TeacherController';
+import ListTeacherController from '../controller/ListTeacherController';
 
 const teachersRouter = Router();
 const teacherController = new TeacherController();
+const listTeacherController = new ListTeacherController();
 teachersRouter.use(ensureAuthenticaded);
 teachersRouter.post(
   '/',
@@ -29,5 +31,15 @@ teachersRouter.post(
     },
   }),
   teacherController.create,
+);
+
+teachersRouter.get(
+  '/:school_id',
+  celebrate({
+    [Segments.PARAMS]: {
+      school_id: Joi.string().required(),
+    },
+  }),
+  listTeacherController.index,
 );
 export default teachersRouter;

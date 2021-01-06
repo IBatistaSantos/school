@@ -15,6 +15,13 @@ class TeacherRepository implements ITeacherRepository {
     return teacher;
   }
 
+  public async findBySchool(school_id: string): Promise<Teacher[]> {
+    const teachers = await this.ormRepository.find({
+      where: { school_id },
+    });
+    return teachers;
+  }
+
   public async create({
     school_id,
     user_id,

@@ -25,7 +25,7 @@ export default class Teacher {
   @Column()
   school_id: string;
 
-  @ManyToOne(() => School, { eager: true })
+  @ManyToOne(() => School)
   @JoinColumn({ name: 'school_id' })
   school: School;
 
