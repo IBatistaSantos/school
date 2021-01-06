@@ -12,8 +12,6 @@ interface IRequest {
   old_password?: string;
   password?: string;
   cpf: string;
-  roles?: [{ name: string }];
-  permissions?: [{ name: string }];
 }
 
 @injectable()
